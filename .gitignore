@@ -1,0 +1,12 @@
+# Build output
+bin/
+obj/
+dist/
+
+# Game API dump (generated from the game's files - not ours to publish)
+dump/
+
+# IDE
+.vs/
+.idea/
+*.user

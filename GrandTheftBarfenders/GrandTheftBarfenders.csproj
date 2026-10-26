@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>GrandTheftBarfenders</AssemblyName>
+    <RootNamespace>GrandTheftBarfenders</RootNamespace>
+    <Version>1.4.0</Version>
+    <!-- Spielordner; bei Bedarf überschreiben: dotnet build -p:GameDir="D:\...\Barfender" -->
+    <GameDir Condition="'$(GameDir)' == ''">J:\Steam\steamapps\common\Barfender</GameDir>
+    <MelonDir>$(GameDir)\MelonLoader</MelonDir>
+    <InteropDir>$(MelonDir)\Il2CppAssemblies</InteropDir>
+    <!-- Nach dem Build automatisch in den Mods-Ordner kopieren (abschalten: -p:CopyToMods=false).
+         Läuft nur zusammen mit dem Plugin Il2CppInteropUnity6000Fix (Ordner daneben). -->
+    <CopyToMods Condition="'$(CopyToMods)' == ''">true</CopyToMods>
+    <!-- Kein Compiler-Server im Hintergrund: Er hält die Spiel-DLLs in Il2CppAssemblies offen, und nach
+         einem Spiel-Update kann MelonLoader sie dann nicht neu erzeugen ("Access denied"). -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="$(MelonDir)\net6\MelonLoader.dll" Private="false" />
+    <Reference Include="$(MelonDir)\net6\0Harmony.dll" Private="false" />
+    <Reference Include="$(MelonDir)\net6\Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(MelonDir)\net6\Il2CppInterop.Common.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppSystem.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppSystem.Core.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.AudioModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.AnimationModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.AmberApp.Core.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.IMGUIModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Unity.InputSystem.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Unity.Mathematics.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.AmberGameLogic.Core.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.AmberGameView.Game.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.AmberApp.Game.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.Assemblies.Core.dll" Private="false" />
+    <Reference Include="$(InteropDir)\Il2CppProtoDivision.Assemblies.Game.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="CopyToModsFolder" AfterTargets="Build" Condition="'$(CopyToMods)' == 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\Mods" />
+    <Message Importance="high" Text="Mod kopiert nach $(GameDir)\Mods" />
+  </Target>
+
+</Project>

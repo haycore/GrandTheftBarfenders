@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <GameDir Condition="'$(GameDir)' == ''">J:\Steam\steamapps\common\Barfender</GameDir>
+    <MelonDir>$(GameDir)\MelonLoader</MelonDir>
+    <!-- Plugin wird in den Plugins-Ordner kopiert (nicht Mods): Es muss vor Il2CppInterop laufen. -->
+    <CopyToPlugins Condition="'$(CopyToPlugins)' == ''">true</CopyToPlugins>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="$(MelonDir)\net6\MelonLoader.dll" Private="false" />
+    <Reference Include="$(MelonDir)\net6\0Harmony.dll" Private="false" />
+    <Reference Include="$(MelonDir)\net6\Iced.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="CopyToPluginsFolder" AfterTargets="Build" Condition="'$(CopyToPlugins)' == 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\Plugins" />
+    <Message Importance="high" Text="Plugin kopiert nach $(GameDir)\Plugins" />
+  </Target>
+
+</Project>
